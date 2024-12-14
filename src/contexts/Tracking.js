@@ -1,22 +1,20 @@
-import React, { useState, useEffect, Children } from "react";
+import React, { useState, useEffect } from "react";
 import Web3Modal from "web3modal";
-import { ether, SigningKey } from "ethers";
-import tracking from "../../contracts/tracking.json"
-import { ethers } from "hardhat";
-import index from "@/pages";
+import { ethers } from "ethers";
 
 
+import tracking from "../contexts/tracking.json"
 const ContractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 const ContractABI = tracking.abi
 
-const fetchContract = (SignerProvider) =>
-    new ether.Contract(ContractAddress, ContractABI, SignerProvider);
+const fetchContract = (SignerOrProvider) =>
+    new ethers.Contract(ContractAddress, ContractABI, SignerOrProvider);
 
 export const TrackingContext = React.createContext();
 
 export const TrackingProvider = async ({ children }) => {
     const DappName = "Product Tracking App";
-    const [currentUser, setUser] = useState("");
+    const [currentUser, setCurrentUser] = useState("");
 
     const createShipment = async (items) => {
         console.log(items);
@@ -42,9 +40,9 @@ export const TrackingProvider = async ({ children }) => {
         console.log(createItem);
     }
     catch (error) {
-        console.log("Wrong Code Benchode", error);
+        console.log("Wrong Code For CreateShipment", error);
     }
-};
+
 const getAllshipment = async () => {
     try {
         const provider = new ethers.providers.JsonRpcProvider();
@@ -54,7 +52,7 @@ const getAllshipment = async () => {
         const allShipments = shipments.map((shipments) => ({
             sender: shipments.sender,
             receiver: shipments.receiver,
-            price: ethers.utils.formatEther(shipments.price.toString()),
+            price: ethers.utils.formatether(shipments.price.toString()),
             pickupTime: shipments.pickupTime.toNumber(),
             deliveryTime: shipments.deliveryTime.toNumber(),
             distance: shipments.distance.toNumber(),
@@ -64,7 +62,7 @@ const getAllshipment = async () => {
         return allShipments;
     }
     catch (error) {
-        console.log("Error want,,getting shipmets 'Madarchode' ", error);
+        console.log("Error want,,getting shipmets ", error);
     }
 };
 
@@ -82,7 +80,7 @@ const getShipmentCount = async () => {
         return shipmentsCount.toNumber();
     }
     catch (error) {
-        console.log("Error want,,getting shipmets 'BSDK' ", error);
+        console.log("Error want,,getting shipmets ", error);
     }
 };
 
@@ -96,7 +94,7 @@ const completeShipment = async (completeShip) => {
         }
         const web3Modal = await Web3Modal();
         const connection = await web3Modal.connect();
-        const provider = new ether.providers.Web3Provider(connection);
+        const provider = new ethers.providers.Web3Provider(connection);
         const signer = provider.getSigner();
         const contract = fetchContract(signer);
 
@@ -134,14 +132,14 @@ const getShipment = async (index) => {
             pickupTime: shipment[2].toNumber(),
             deliveryTime: shipment[3].toNumber(),
             distance: shipment[4].toNumber(),
-            price: ethers.utils.formatEther(shipment[5].toString()),
+            price: ethers.utils.formatether(shipment[5].toString()),
             isPaid: shipment[6],
             Status: shipment[7],
         };
         return SingleShiplent;
     }
     catch (error) {
-        console.log("Sorry No Shipment, 'Gandu MC'")
+        console.log("Sorry No Shipment")
 
     }
 };
@@ -158,7 +156,7 @@ const startShipment = async (getProduct) => {
         });
         const web3Modal = await Web3Modal();
         const connection = await web3Modal.connect();
-        const provider = new ether.providers.Web3Provider(connection);
+        const provider = new ethers.providers.Web3Provider(connection);
         const signer = provider.getSigner();
         const contract = fetchContract(signer);
 
@@ -214,7 +212,7 @@ useEffect(() => {
 
 
 return (
-    <TrackingContext.provider
+    <TrackingContext.Provider
         value={{
             connectWallet,
             createShipment,
@@ -228,5 +226,6 @@ return (
         }}
     >
         {children}
-    </TrackingContext.provider>
+    </TrackingContext.Provider>
 );
+};
