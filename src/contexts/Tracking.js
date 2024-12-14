@@ -3,7 +3,7 @@ import Web3Modal from "web3modal";
 import { ethers } from "ethers";
 
 
-import tracking from "../contexts/tracking.json"
+import tracking from "../../artifacts/contracts/Tracking.sol/Tracking.json"
 const ContractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 const ContractABI = tracking.abi
 
@@ -12,7 +12,7 @@ const fetchContract = (SignerOrProvider) =>
 
 export const TrackingContext = React.createContext();
 
-export const TrackingProvider = async ({ children }) => {
+export const TrackingProvider = ({ children }) => {
     const DappName = "Product Tracking App";
     const [currentUser, setCurrentUser] = useState("");
 
@@ -23,11 +23,11 @@ export const TrackingProvider = async ({ children }) => {
 
     try {
         const web3modal = new Web3Modal();
-        const connection = await web3modal.connect();
-        const provider = new provider.Web3Provider(connection);
+        const connection =  web3modal.connect();
+        const provider = new ethers.providers.Web3Provider(connection);
         const signer = provider.getSigner();
         const contract = fetchContract(signer);
-        const createItem = await contract.createShipment(
+        const createItem = contract.createShipment(
             receiver,
             new Date(pickupTime).getTime(),
             distance,
@@ -36,7 +36,7 @@ export const TrackingProvider = async ({ children }) => {
                 value: ethers.utils.parseUnits(price, 18),
             }
         );
-        await createItem.wait();
+       createItem.wait();
         console.log(createItem);
     }
     catch (error) {
@@ -73,7 +73,7 @@ const getShipmentCount = async () => {
         const accounts = await window.ethereum.request({
             method: 'eth_account',
         });
-        const provider = new ethers.provider.JsonRpcProvider(
+        const provider = new ethers.providers.JsonRpcProvider(
         );
         const contract = fetchContract(provider);
         const shipmentsCount = await contract.getShipmentCount(index[0]);
@@ -122,7 +122,7 @@ const getShipment = async (index) => {
             method: "eth_account",
 
         });
-        const provider = new ethers.provider.JsonRpcProvider();
+        const provider = new ethers.providers.JsonRpcProvider();
         const contract = fetchContract(provider);
         const shipment = await contract.getShipment(accounts[0], index * 1);
 
@@ -191,7 +191,7 @@ const checkIfWalletConnected = async () => {
         return "Account Not connected";
     }
 };
-const connect = async () => {
+const connectWallet = async () => {
     try {
         if (!window.ethereum) return "Install MetaMask";
 
@@ -207,7 +207,9 @@ const connect = async () => {
 };
 
 useEffect(() => {
-    checkIfWalletConnected();
+    if (typeof window !== "undefined") {
+        checkIfWalletConnected();
+    }
 }, [])
 
 
