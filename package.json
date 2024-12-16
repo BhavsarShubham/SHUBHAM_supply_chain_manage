@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -30,6 +30,7 @@
     "@types/mocha": "^10.0.10",
     "autoprefixer": "^10.4.20",
     "chai": "^4.2.0",
+    "cross-env": "^7.0.3",
     "hardhat": "^2.22.17",
     "hardhat-gas-reporter": "^1.0.8",
     "postcss": "^8.4.49",

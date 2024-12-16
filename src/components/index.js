@@ -1,11 +1,13 @@
-import Footer from "./Footer";
+import  Footer from "./Footer";
 import  Form  from "./Form";
-import  getShipment  from "./GetShipment";
+import  GetShipment from "./GetShipment";
 import  Navbar  from "./Navbar";
 import  Profile  from "./Profile";
 import  Service  from "./Service";
 import  StartShipment  from "./StartShipment";
 import  Table  from "./Table";
+
+
 // SVG file import are start
 import Nav1 from "./SVG/Nav1";
 import Nav2 from "./SVG/Nav2";
@@ -14,15 +16,16 @@ import Fot1 from "./SVG/Fot1";
 import Fot2 from "./SVG/Fot2";
 import Str1 from "./SVG/Str1";
 
-export{
+export default{
   Footer,
   Form,
-  getShipment,
   Navbar,
+  GetShipment,
   Profile,
   Service,
   StartShipment,
-  Table,  
+  Table, 
+
   Nav1,
   Nav2,
   Nav3,

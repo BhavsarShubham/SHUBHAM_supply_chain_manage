@@ -52,7 +52,7 @@ const getAllshipment = async () => {
         const allShipments = shipments.map((shipments) => ({
             sender: shipments.sender,
             receiver: shipments.receiver,
-            price: ethers.utils.formatether(shipments.price.toString()),
+            price: ethers.utils.formatEther(shipments.price.toString()),
             pickupTime: shipments.pickupTime.toNumber(),
             deliveryTime: shipments.deliveryTime.toNumber(),
             distance: shipments.distance.toNumber(),
@@ -132,7 +132,7 @@ const getShipment = async (index) => {
             pickupTime: shipment[2].toNumber(),
             deliveryTime: shipment[3].toNumber(),
             distance: shipment[4].toNumber(),
-            price: ethers.utils.formatether(shipment[5].toString()),
+            price: ethers.utils.formatEther(shipment[5].toString()),
             isPaid: shipment[6],
             Status: shipment[7],
         };
@@ -174,23 +174,20 @@ const startShipment = async (getProduct) => {
 };
 const checkIfWalletConnected = async () => {
     try {
-        if (!window.ethereum) {
-            return "Install Metamask";
-        }
-        const account = await window.ethereum.request({
-            method: "eth_accounts",
-        })
-        if (account.length) {
-            setCurrentUser(account[0]);
-        }
-        else {
-            return "No Acc"
-        }
+      if (typeof window === "undefined") return "Install Metamask";
+      const account = await window.ethereum.request({
+        method: "eth_accounts",
+      });
+      if (account.length) {
+        setCurrentUser(account[0]);
+      } else {
+        return "No Account";
+      }
+    } catch (error) {
+      console.log("Account not connected");
     }
-    catch (error) {
-        return "Account Not connected";
-    }
-};
+  };
+  
 const connectWallet = async () => {
     try {
         if (!window.ethereum) return "Install MetaMask";
@@ -208,6 +205,7 @@ const connectWallet = async () => {
 
 useEffect(() => {
     if (typeof window !== "undefined") {
+        const web3modal = new Web3Modal();
         checkIfWalletConnected();
     }
 }, [])

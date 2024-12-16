@@ -1,7 +1,7 @@
 import React from 'react'
 
-export const getShipment = () => {
+export const GetShipment = () => {
   return (
-    <div>getShipment</div>
+    <div>Getshipment</div>
   )
 }
