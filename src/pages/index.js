@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-// import { Form, GetShipment, Profile, Service, StartShipment, Table } from "../components/index";
+
 import { Form } from "../components/Form";
 import { GetShipment } from "../components/GetShipment";
 import { Profile } from "../components/Profile";
@@ -11,14 +11,6 @@ import { CompleteShipment } from "../components/CompleteShipment";
 import { TrackingContext } from "../contexts/Tracking"
 
 
-console.log({
-  Form,
-  GetShipment,
-  Profile,
-  Service,
-  StartShipment,
-  Table
-});
 
 const index = () => {
   const {

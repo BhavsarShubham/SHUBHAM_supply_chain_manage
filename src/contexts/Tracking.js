@@ -19,11 +19,11 @@ export const TrackingProvider = ({ children }) => {
     const createShipment = async (items) => {
         console.log(items);
         const { receiver, pickupTime, distance, price } = items;
-    }
+   
 
     try {
         const web3modal = new Web3Modal();
-        const connection =  web3modal.connect();
+        const connection = await web3modal.connect();
         const provider = new ethers.providers.Web3Provider(connection);
         const signer = provider.getSigner();
         const contract = fetchContract(signer);
@@ -42,7 +42,7 @@ export const TrackingProvider = ({ children }) => {
     catch (error) {
         console.log("Wrong Code For CreateShipment", error);
     }
-
+ };
 const getAllshipment = async () => {
     try {
         const provider = new ethers.providers.JsonRpcProvider();
@@ -68,7 +68,7 @@ const getAllshipment = async () => {
 
 const getShipmentCount = async () => {
     try {
-        if (!window.ethereum) return "Install Metamask";
+        if (typeof window !== "undefined" && !window.ethereum) return "Install Metamask";
 
         const accounts = await window.ethereum.request({
             method: 'eth_account',
@@ -89,10 +89,10 @@ const completeShipment = async (completeShip) => {
     console.log(completeShip);
     const { receiver, index } = completeShip;
     try {
-        if (!window.ethereum) {
+        if (typeof window !== "undefined" && !window.ethereum) {
             return "Install metamask";
         }
-        const web3Modal = await Web3Modal();
+        const web3Modal = Web3Modal();
         const connection = await web3Modal.connect();
         const provider = new ethers.providers.Web3Provider(connection);
         const signer = provider.getSigner();
@@ -115,7 +115,7 @@ const completeShipment = async (completeShip) => {
 const getShipment = async (index) => {
     console.log(index * 1);
     try {
-        if (!window.ethereum) {
+        if (typeof window !== "undefined" && !window.ethereum) {
             return "Install metamask";
         }
         const accounts = await window.ethereum.request({
@@ -147,7 +147,7 @@ const startShipment = async (getProduct) => {
     const { receiver, index } = getProduct;
 
     try {
-        if (!window.ethereum) {
+        if (typeof window !== "undefined" && !window.ethereum) {
             return "Install metamask";
         }
         const account = await window.ethereum.request({
@@ -190,7 +190,7 @@ const checkIfWalletConnected = async () => {
   
 const connectWallet = async () => {
     try {
-        if (!window.ethereum) return "Install MetaMask";
+        if (typeof window !== "undefined" && !window.ethereum) return "Install MetaMask";
 
         const accounts = await window.ethereum.request({
             method: "eth_requestAccounts",
@@ -204,10 +204,8 @@ const connectWallet = async () => {
 };
 
 useEffect(() => {
-    if (typeof window !== "undefined") {
-        const web3modal = new Web3Modal();
         checkIfWalletConnected();
-    }
+
 }, [])
 
 

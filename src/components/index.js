@@ -1,11 +1,11 @@
-import  Footer from "./Footer";
-import  Form  from "./Form";
-import  GetShipment from "./GetShipment";
+import  {Footer} from "./Footer";
+import  {Form } from "./Form";
+import  {GetShipment} from "./GetShipment";
 import  Navbar  from "./Navbar";
-import  Profile  from "./Profile";
-import  Service  from "./Service";
-import  StartShipment  from "./StartShipment";
-import  Table  from "./Table";
+import  {Profile}  from "./Profile";
+import  {Service } from "./Service";
+import  {StartShipment}  from "./StartShipment";
+import  {Table}  from "./Table";
 
 
 // SVG file import are start
