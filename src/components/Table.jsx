@@ -1,7 +1,87 @@
-import React from 'react'
+import React from 'react';
 
-export const Table = () => {
+export const Table = ({ setCreateShipmentModel, allShipmentsdata }) => {
+  const convertTime = (time) => {
+    const newTime = new Date(time);
+    const dateTime = new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).format(newTime);
+    return dateTime;
+  };
+
   return (
-    <div>Table</div>
-  )
-}
+    <div className='max-w-screen-xl mx-auto px-4 md:px-8'>
+      {/* Header Section */}
+      <div className='flex flex-col items-start justify-between gap-4 p-4 md:flex-row'>
+        <div className='max-w-lg'>
+          <h3 className='text-gray-800 text-xl font-bold sm:text-2xl'>
+            Create Tracking
+          </h3>
+          <p className='text-gray-600 mt-2'>Track Every Step, Every Time</p>
+        </div>
+        <div className='mt-3 md:mt-0'>
+          <button
+            onClick={() => setCreateShipmentModel(true)}
+            className='inline-block px-4 py-2 text-white font-medium bg-gray-800 hover:bg-gray-700 active:bg-orange-900 md:text-sm rounded-lg'
+          >
+            Add Tracking
+          </button>
+        </div>
+      </div>
+
+      {/* Table Section */}
+      <div className='mt-2 shadow-sm border rounded-lg overflow-x-auto'>
+        <table className='w-full table-auto text-sm text-left'>
+          <thead className='bg-gray-50 text-gray-600 font-medium border-b'>
+            <tr>
+              <th className='py-3 px-6'>Sender</th>
+              <th className='py-3 px-6'>Receiver</th>
+              <th className='py-3 px-6'>PickUp Time</th>
+              <th className='py-3 px-6'>Distance</th>
+              <th className='py-3 px-6'>Price</th>
+              <th className='py-3 px-6'>Delivery Time</th>
+              <th className='py-3 px-6'>Paid</th>
+              <th className='py-3 px-6'>Status</th>
+            </tr>
+          </thead>
+          <tbody className='text-gray-600 divide-y'>
+            {allShipmentsdata?.map((shipment, idx) => (
+              <tr key={idx}>
+                <td className='px-6 py-4 whitespace-nowrap'>
+                  {shipment.sender?.slice(0, 15) || 'N/A'}...
+                </td>
+                <td className='px-6 py-4 whitespace-nowrap'>
+                  {shipment.receiver?.slice(0, 15) || 'N/A'}...
+                </td>
+                <td className='px-6 py-4 whitespace-nowrap'>
+                  {convertTime(shipment.pickupTime) || 'N/A'}
+                </td>
+                <td className='px-6 py-4 whitespace-nowrap'>
+                  {shipment.distance ? `${shipment.distance} Km` : 'N/A'}
+                </td>
+                <td className='px-6 py-4 whitespace-nowrap'>
+                  {shipment.price ? `${shipment.price} Eth` : 'N/A'}
+                </td>
+                <td className='px-6 py-4 whitespace-nowrap'>
+                  {shipment.deliveryTime || 'N/A'}
+                </td>
+                <td className='px-6 py-4 whitespace-nowrap'>
+                  {shipment.isPaid ? 'Completed' : 'Not Completed'}
+                </td>
+                <td className='px-6 py-4 whitespace-nowrap'>
+                  {shipment.status === 0
+                    ? 'Pending'
+                    : shipment.status === 1
+                    ? 'In Transit'
+                    : 'Delivered'}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};

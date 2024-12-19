@@ -16,7 +16,7 @@ export const TrackingProvider = ({ children }) => {
     const DappName = "Product Tracking App";
     const [currentUser, setCurrentUser] = useState("");
 
-    const createShipment = async (items) => {
+ const createShipment = async (items) => {
         console.log(items);
         const { receiver, pickupTime, distance, price } = items;
    
@@ -27,7 +27,7 @@ export const TrackingProvider = ({ children }) => {
         const provider = new ethers.providers.Web3Provider(connection);
         const signer = provider.getSigner();
         const contract = fetchContract(signer);
-        const createItem = contract.createShipment(
+        const createItem = await contract.createShipment(
             receiver,
             new Date(pickupTime).getTime(),
             distance,

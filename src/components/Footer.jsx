@@ -21,7 +21,9 @@ export const Footer = () => {
             <img
               src="https://t3.ftcdn.net/jpg/02/07/93/42/360_F_207934275_i07fRL6BVE1CJBYUW1TAsP9bn8lSulxT.jpg"
               alt="Logo"
-              className="w-40"
+              // className="w-40"
+              width={90}
+              height={90}
             />
           
             <p className="max-w-md text-sm">
