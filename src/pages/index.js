@@ -6,13 +6,13 @@ import  Profile  from "../components/Profile";
 import  Service from "../components/Service";
 import  StartShipment  from "../components/StartShipment";
 import  Table from "../components/Table";
-
 import  CompleteShipment  from "../components/CompleteShipment";
+
 import { TrackingContext } from "../contexts/Tracking"
 
 
 
-const index = () => {
+const Index = () => {
   const {
     currentUser,
     createShipment,
@@ -56,9 +56,9 @@ const index = () => {
         allShipmentsData={allShipmentsData}
       />
       <Form
-        createShipmentModel={createShipmentModel}
-        createShipment={createShipment}
-        setCreateShipmentModel={setCreateShipmentModel}
+          setCreateShipmentModel={setCreateShipmentModel} 
+          createShipmentModel={createShipmentModel} 
+          createShipment={createShipment}
         currentUser={currentUser}
         getShipmentCount={getShipmentCount}
       />
@@ -87,4 +87,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

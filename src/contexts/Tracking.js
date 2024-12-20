@@ -4,11 +4,78 @@ import { ethers } from "ethers";
 
 
 import tracking from "../../artifacts/contracts/Tracking.sol/Tracking.json"
-const ContractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-const ContractABI = tracking.abi
 
-const fetchContract = (SignerOrProvider) =>
-    new ethers.Contract(ContractAddress, ContractABI, SignerOrProvider);
+// Network configuration
+const networks = {
+    localhost: {
+      chainName: "localhost",
+      nativeCurrency: {
+        name: "GO",
+        symbol: "GO",
+        decimals: 18,
+      },
+      rpcUrls: ["http://127.0.0.1:8545/"], // Corrected the URL typo
+      blockExplorerUrls: ["https://bscscan.com"], // Example for BSC explorer, can be adjusted for localhost if needed
+    },
+  };
+  
+  // Function to change network (e.g., switch MetaMask network)
+  const changeNetwork = async ({ networkName }) => {
+    try {
+      const network = networks[networkName];
+      
+      // Check if the network configuration exists
+      if (!network) {
+        console.error("Network not found!");
+        return;
+      }
+  
+      // For MetaMask, you can use window.ethereum.request to switch networks
+      if (window.ethereum) {
+        await window.ethereum.request({
+          method: "wallet_addEthereumChain",
+          params: [
+            {
+              chainId: ethers.utils.hexValue(1337), // Example for localhost network (you should match this with your chain's ID)
+              chainName: network.chainName,
+              nativeCurrency: network.nativeCurrency,
+              rpcUrls: network.rpcUrls,
+              blockExplorerUrls: network.blockExplorerUrls,
+            },
+          ],
+        });
+        console.log("Network switched to:", networkName);
+      } else {
+        console.error("Ethereum provider not found!");
+      }
+    } catch (error) {
+      console.error("Failed to switch network:", error);
+    }
+  };
+  
+  // Handle network switch (can be triggered from anywhere in your app)
+  export const handleNetworkSwitch = async () => {
+    const networkName = "localhost"; // Change to the network name you want to switch to
+    await changeNetwork({ networkName });
+  };
+  
+
+
+
+
+
+
+
+
+
+
+
+const ContractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+// const ContractABI = tracking.abi
+const ContractABI = tracking
+
+const fetchContract = (signerOrProvider) =>
+    new ethers.Contract(ContractAddress, ContractABI, signerOrProvider);
 
 export const TrackingContext = React.createContext();
 
@@ -17,14 +84,14 @@ export const TrackingProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState("");
 
  const createShipment = async (items) => {
-        // console.log(items);
+        console.log(items);
         const { receiver, pickupTime, distance, price } = items;
-        console.log("It is items",items)
    
 
     try {
-        const web3modal = new Web3Modal();
-        const connection = await web3modal.connect();
+        const web3Modal = new Web3Modal();
+        const connection = await web3Modal.connect();
+        console.log("connectin ka nam",connection)
         const provider = new ethers.providers.Web3Provider(connection);
         const signer = provider.getSigner();
         const contract = fetchContract(signer);
@@ -37,7 +104,7 @@ export const TrackingProvider = ({ children }) => {
                 value: ethers.utils.parseUnits(price, 18),
             }
         );
-       createItem.wait();
+        await createItem.wait();
         console.log(createItem);
     }
     catch (error) {
@@ -47,20 +114,22 @@ export const TrackingProvider = ({ children }) => {
 const getAllshipment = async () => {
     try {
         const provider = new ethers.providers.JsonRpcProvider();
+        // await provider.send("eth_requestAccounts", []); // Request accounts
+    
         const contract = fetchContract(provider);
 
-        const shipments = await contract.getAllTransactions();
-        const allShipments = shipments.map((shipments) => ({
-            sender: shipments.sender,
-            receiver: shipments.receiver,
-            price: ethers.utils.formatEther(shipments.price.toString()),
-            pickupTime: shipments.pickupTime.toNumber(),
-            deliveryTime: shipments.deliveryTime.toNumber(),
-            distance: shipments.distance.toNumber(),
-            isPaid: shipments.isPaid,
-            Status: shipments.Status
+        const shipment = await contract.getAllTransactions();
+        const allshipments = shipment.map((shipment) => ({
+            sender: shipment.sender,
+            receiver: shipment.receiver,
+            price: ethers.utils.formatEther(shipment.price.toString()),
+            pickupTime: shipment.pickupTime.toNumber(),
+            deliveryTime: shipment.deliveryTime.toNumber(),
+            distance: shipment.distance.toNumber(),
+            isPaid: shipment.isPaid,
+            status: shipment.Status
         }));
-        return allShipments;
+        return allshipments;
     }
     catch (error) {
         console.log("Error want,getting shipmets ", error);
@@ -72,10 +141,11 @@ const getShipmentCount = async () => {
         if (typeof window !== "undefined" && !window.ethereum) return "Install Metamask";
 
         const accounts = await window.ethereum.request({
-            method: 'eth_account',
+            method: 'eth_accounts',
         });
-        const provider = new ethers.providers.JsonRpcProvider(
-        );
+        const provider = new ethers.providers.JsonRpcProvider();
+        // await provider.send("eth_requestAccounts", []); // Request accounts
+    
         const contract = fetchContract(provider);
         const shipmentsCount = await contract.getShipmentCount(index[0]);
         return shipmentsCount.toNumber();
@@ -93,6 +163,9 @@ const completeShipment = async (completeShip) => {
         if (typeof window !== "undefined" && !window.ethereum) {
             return "Install metamask";
         }
+        const accounts = await window.ethereum.request({
+            method:"eth_accounts",
+        });
         const web3modal = Web3Modal();
         const connection = await web3modal.connect();
         const provider = new ethers.providers.Web3Provider(connection);
@@ -103,7 +176,7 @@ const completeShipment = async (completeShip) => {
             accounts[0],
             receiver,
             index,
-            { gaslimit: 300000 }
+            { gasLimit: 300000, }
         );
         transaction.wait();
         console.log(transaction);
@@ -120,10 +193,12 @@ const getShipment = async (index) => {
             return "Install metamask";
         }
         const accounts = await window.ethereum.request({
-            method: "eth_account",
+            method: "eth_accounts",
 
         });
         const provider = new ethers.providers.JsonRpcProvider();
+        // await provider.send("eth_requestAccounts", []); // Request accounts
+     
         const contract = fetchContract(provider);
         const shipment = await contract.getShipment(accounts[0], index * 1);
 
@@ -134,8 +209,8 @@ const getShipment = async (index) => {
             deliveryTime: shipment[3].toNumber(),
             distance: shipment[4].toNumber(),
             price: ethers.utils.formatEther(shipment[5].toString()),
-            isPaid: shipment[6],
-            Status: shipment[7],
+            Status: shipment[6],
+            isPaid: shipment[7],
         };
         return SingleShiplent;
     }
@@ -155,8 +230,8 @@ const startShipment = async (getProduct) => {
             method: "eth_account",
 
         });
-        const web3modal = await Web3Modal();
-        const connection = await web3modal.connect();
+        const web3Modal = await Web3Modal();
+        const connection = await web3Modal.connect();
         const provider = new ethers.providers.Web3Provider(connection);
         const signer = provider.getSigner();
         const contract = fetchContract(signer);
@@ -184,7 +259,8 @@ const checkIfWalletConnected = async () => {
       } else {
         return "No Account";
       }
-    } catch (error) {
+    } 
+    catch (error) {
       console.log("Account not connected");
     }
   };
@@ -206,7 +282,6 @@ const connectWallet = async () => {
 
 useEffect(() => {
         checkIfWalletConnected();
-
 }, [])
 
 
