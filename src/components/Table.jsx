@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const Table = ({ setCreateShipmentModel, allShipmentsdata }) => {
+export default ({ setCreateShipmentModel, allShipmentsdata }) => {
   const convertTime = (time) => {
     const newTime = new Date(time);
     const dateTime = new Intl.DateTimeFormat('en-US', {
@@ -50,22 +50,22 @@ export const Table = ({ setCreateShipmentModel, allShipmentsdata }) => {
             {allShipmentsdata?.map((shipment, idx) => (
               <tr key={idx}>
                 <td className='px-6 py-4 whitespace-nowrap'>
-                  {shipment.sender?.slice(0, 15) || 'N/A'}...
+                  {shipment.sender.slice(0, 15) }...
                 </td>
                 <td className='px-6 py-4 whitespace-nowrap'>
-                  {shipment.receiver?.slice(0, 15) || 'N/A'}...
+                  {shipment.receiver.slice(0, 15) }...
                 </td>
                 <td className='px-6 py-4 whitespace-nowrap'>
-                  {convertTime(shipment.pickupTime) || 'N/A'}
+                  {convertTime(shipment.pickupTime) }
                 </td>
                 <td className='px-6 py-4 whitespace-nowrap'>
-                  {shipment.distance ? `${shipment.distance} Km` : 'N/A'}
+                  {shipment.distance}Km
                 </td>
                 <td className='px-6 py-4 whitespace-nowrap'>
-                  {shipment.price ? `${shipment.price} Eth` : 'N/A'}
+                  {shipment.price }
                 </td>
                 <td className='px-6 py-4 whitespace-nowrap'>
-                  {shipment.deliveryTime || 'N/A'}
+                  {shipment.deliveryTime }
                 </td>
                 <td className='px-6 py-4 whitespace-nowrap'>
                   {shipment.isPaid ? 'Completed' : 'Not Completed'}

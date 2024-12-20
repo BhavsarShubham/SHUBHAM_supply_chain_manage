@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export const Form = ({
+export default ({
   setCreateShipmentModel,
   createShipmentModel,
   createShipment,
@@ -12,27 +12,15 @@ export const Form = ({
     price: "",
   });
   const createItem = async () => {
+    console.log("Create Item button clicked");
     try {
-      // Validate shipment fields
-      if (!shipment.receiver || !shipment.pickupTime || !shipment.distance || !shipment.price) {
-        console.error("All fields are required.");
-        return;
-      }
-  
-      console.log("Creating shipment with data:", shipment);
-  
-      // Trigger the MetaMask transaction
-      const transaction = await createShipment(shipment);
-      console.log("Transaction result:", transaction);
-  
-      // Close modal on success
-      setCreateShipmentModel(false);
-    } catch (error) {
+      await createShipment(shipment);
+    }catch (error) {
       console.error("Error creating shipment:", error);
     }
   };
-  
-  
+
+
 
 
   return createShipmentModel ? (

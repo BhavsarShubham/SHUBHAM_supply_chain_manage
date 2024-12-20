@@ -17,8 +17,9 @@ export const TrackingProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState("");
 
  const createShipment = async (items) => {
-        console.log(items);
+        // console.log(items);
         const { receiver, pickupTime, distance, price } = items;
+        console.log("It is items",items)
    
 
     try {
@@ -62,7 +63,7 @@ const getAllshipment = async () => {
         return allShipments;
     }
     catch (error) {
-        console.log("Error want,,getting shipmets ", error);
+        console.log("Error want,getting shipmets ", error);
     }
 };
 
@@ -80,7 +81,7 @@ const getShipmentCount = async () => {
         return shipmentsCount.toNumber();
     }
     catch (error) {
-        console.log("Error want,,getting shipmets ", error);
+        console.log("Error want,getting shipmets ", error);
     }
 };
 
@@ -92,8 +93,8 @@ const completeShipment = async (completeShip) => {
         if (typeof window !== "undefined" && !window.ethereum) {
             return "Install metamask";
         }
-        const web3Modal = Web3Modal();
-        const connection = await web3Modal.connect();
+        const web3modal = Web3Modal();
+        const connection = await web3modal.connect();
         const provider = new ethers.providers.Web3Provider(connection);
         const signer = provider.getSigner();
         const contract = fetchContract(signer);
@@ -154,8 +155,8 @@ const startShipment = async (getProduct) => {
             method: "eth_account",
 
         });
-        const web3Modal = await Web3Modal();
-        const connection = await web3Modal.connect();
+        const web3modal = await Web3Modal();
+        const connection = await web3modal.connect();
         const provider = new ethers.providers.Web3Provider(connection);
         const signer = provider.getSigner();
         const contract = fetchContract(signer);

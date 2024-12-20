@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 import { TrackingContext } from "@/contexts/Tracking";
-console.log("TrackingContext hai ye:", TrackingContext);
+// console.log("TrackingContext hai ye:", TrackingContext);
 
 import Nav1 from "@/components/SVG/Nav1";
 import Nav2 from "@/components/SVG/Nav2";
@@ -50,6 +50,7 @@ console.log({ currentUser, connectWallet });
             onClick={() => setTimeout(() => setState(!state), 0)}
           >
             <Nav1/>
+            <Nav2/>
           </button>
         </div>
       
@@ -79,6 +80,7 @@ console.log({ currentUser, connectWallet });
             >
               
               Connect Wallet<Nav3/>
+              
             </button>
           )}
         </div>
