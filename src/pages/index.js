@@ -1,26 +1,21 @@
 import React, { useState, useEffect, useContext } from "react";
-
-import  Form  from "../components/Form";
-import  GetShipment  from "../components/GetShipment";
-import  Profile  from "../components/Profile";
-import  Service from "../components/Service";
-import  StartShipment  from "../components/StartShipment";
-import  Table from "../components/Table";
-import  CompleteShipment  from "../components/CompleteShipment";
-
-import { TrackingContext } from "../contexts/Tracking"
-
-
+import { TrackingContext } from "../contexts/Tracking";
+import Form from "../components/Form";
+import GetShipment from "../components/GetShipment";
+import Profile from "../components/Profile";
+import Service from "../components/Service";
+import StartShipment from "../components/StartShipment";
+import Table from "../components/Table";
+import CompleteShipment from "../components/CompleteShipment";
 
 const Index = () => {
   const {
     currentUser,
     createShipment,
-    getAllshipment,
+    getAllShipment,
     completeShipment,
-    getShipment,
-    startShipment,
-    getShipmentCount,
+    connectWallet,
+    getShipmentCount, // Make sure this is part of the context
   } = useContext(TrackingContext);
 
   const [createShipmentModel, setCreateShipmentModel] = useState(false);
@@ -31,17 +26,16 @@ const Index = () => {
   const [allShipmentsData, setAllShipmentsData] = useState([]);
 
   useEffect(() => {
-    const fetchShipmentData = async () => {
+    const fetchData = async () => {
       try {
-        const allData = await getAllshipment();
-        setAllShipmentsData(allData);
+        const shipments = await getAllShipment();
+        setAllShipmentsData(shipments || []);
       } catch (error) {
-        console.error("Error fetching shipment data:", error);
+        console.error("Error loading shipments:", error.message);
       }
     };
-
-    fetchShipmentData();
-  }, [getAllshipment]);
+    fetchData();
+  }, [getAllShipment]);
 
   return (
     <>
@@ -56,33 +50,24 @@ const Index = () => {
         allShipmentsData={allShipmentsData}
       />
       <Form
-          setCreateShipmentModel={setCreateShipmentModel} 
-          createShipmentModel={createShipmentModel} 
-          createShipment={createShipment}
+        createShipment={createShipment}
+        currentUser={currentUser}
+        setCreateShipmentModel={setCreateShipmentModel}
+        createShipmentModel={createShipmentModel}
+      />
+      <Profile
+        openProfile={openProfile}
+        setOpenProfile={setOpenProfile}
         currentUser={currentUser}
         getShipmentCount={getShipmentCount}
       />
-      <Profile
-      openProfile={openProfile}
-      setOpenProfile={setOpenProfile}
-      currentUser={currentUser}
-      getShipmentCount={getShipmentCount}
-      />
       <CompleteShipment
+        completeShipment={completeShipment}
         completeModel={completeModel}
         setCompleteModel={setCompleteModel}
-        completeShipment={completeShipment}
       />
-      <GetShipment
-        getModel={getModel}
-        setGetModel={setGetModel}
-        getShipment={getShipment}
-      />
-      <StartShipment
-        startModel={startModel}
-        setStartModel={setStartModel}
-        startShipment={startShipment}
-      />
+      <GetShipment getModel={getModel} setGetModel={setGetModel} />
+      <StartShipment startModel={startModel} setStartModel={setStartModel} />
     </>
   );
 };

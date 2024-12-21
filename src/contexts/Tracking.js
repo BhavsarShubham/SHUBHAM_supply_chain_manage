@@ -243,7 +243,6 @@ export const TrackingProvider = ({ children }) => {
                 getShipmentCount,
                 DappName,
                 currentUser,
-                // handleNetworkSwitch, // Expose network switch function
             }}
         >
             {children}

@@ -44,7 +44,7 @@ contract Tracking {
         address indexed receiver,
         uint256 pickupTime
     );
-    event ShipmentDeliverd(
+    event ShipmentDelivered(
         address indexed sender,
         address indexed receiver,
         uint256 deliveryTime
@@ -101,6 +101,7 @@ contract Tracking {
             _price
         );
     }
+
     function startShipment(
         address _sender,
         address _receiver,
@@ -109,20 +110,19 @@ contract Tracking {
         Shipment storage shipment = shipments[_sender][_index];
         TypeShipment storage typeShipment = typeShipments[_index];
 
-        require(shipment.receiver == _receiver, "Invalide receiver Address");
+        require(shipment.receiver == _receiver, "Invalid receiver address");
         require(
             shipment.status == ShipmentStatus.PENDING,
-            "Shipment aready transmite"
+            "Shipment already in transit"
         );
 
         shipment.status = ShipmentStatus.IN_TRANSIT;
         typeShipment.status = ShipmentStatus.IN_TRANSIT;
 
-        // emit ShipmentInTransit(_sender, _receiver, shipment.pickupTime);
         emit ShipmentTransit(_sender, _receiver, shipment.pickupTime);
     }
 
-    function CompleteShipment(
+    function completeShipment(
         address _sender,
         address _receiver,
         uint256 _index
@@ -130,12 +130,12 @@ contract Tracking {
         Shipment storage shipment = shipments[_sender][_index];
         TypeShipment storage typeShipment = typeShipments[_index];
 
-        require(shipment.receiver == _receiver, "Invalide receiver Address");
+        require(shipment.receiver == _receiver, "Invalid receiver address");
         require(
             shipment.status == ShipmentStatus.IN_TRANSIT,
-            "Shipment is not transmite"
+            "Shipment is not in transit"
         );
-        require(!shipment.isPaid, "Shipment already Paid");
+        require(!shipment.isPaid, "Shipment already paid");
 
         shipment.status = ShipmentStatus.DELIVERED;
         typeShipment.status = ShipmentStatus.DELIVERED;
@@ -148,9 +148,10 @@ contract Tracking {
         shipment.isPaid = true;
         typeShipment.isPaid = true;
 
-        emit ShipmentDeliverd(_sender, _receiver, shipment.deliveryTime);
+        emit ShipmentDelivered(_sender, _receiver, shipment.deliveryTime);
         emit ShipmentPaid(_sender, _receiver, amount);
     }
+
     function getShipment(
         address _sender,
         uint256 _index
@@ -180,10 +181,13 @@ contract Tracking {
             shipment.isPaid
         );
     }
+
     function getShipmentCount(address _sender) public view returns (uint256) {
         return shipments[_sender].length;
     }
-    function getAllTransaction() public view returns (TypeShipment[] memory) {
+
+    // Updated function name to match frontend
+    function getAllShipments() public view returns (TypeShipment[] memory) {
         return typeShipments;
     }
 }
